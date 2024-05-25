@@ -1,0 +1,113 @@
+{
+    "categories":[
+        {
+            "name":"Biryani and Rice Dishes",
+            "sub_categories":[
+                "Chicken Biryani",
+                "Beef Biryani",
+                "Sindhi Biryani",
+                "Pulao(Chicken or Beef)"
+            ]
+        },
+        {
+            "name":"Curries",
+            "sub_categories":[
+                "Chicken Karachai",
+                "Beef Nihari",
+                "Mutton Korma"
+            ]
+        },
+        {
+            "name":"Breads(roti)",
+            "sub_categories":[
+                "Naan",
+                "Tandoori Roti",
+                "Chapati",
+                "Kulcha"
+            ]
+        },
+        {
+            "name":"Grilled and BBQ",
+            "sub_categories":[
+                "Seekh Kebabs",
+                "Checken Tikka",
+                "Malai Boti"
+            ]
+        },
+        {
+            "name":"Snacks and Street Food",
+            "sub_categories":[
+                "Samosas",
+                "Pakoras",
+                "Chaat",
+                "Golgappa(pani puri)",
+                "Dahi Bhalla"
+            ]
+        },
+        {
+            "name":"Vegetarian Dishes",
+            "sub_categories":[
+                "Palak Paneer",
+                "Chana Masala",
+                "Aloo Gobi",
+                "Bhindi Masala"
+            ]
+        },
+        {
+            "name":"Lentils and Beans",
+            "sub_categories":[
+                "Dal Makhani",
+                "Chana Dal",
+                "Masoor Dal",
+                "Rajma"
+            ]
+        },
+        {
+            "name":"Desi Breakfast",
+            "sub_categories":[
+                "Paratha",
+                "Halwa Puri",
+                "Nihari",
+                "Chana Masala"
+            ]
+        },
+        {
+            "name":"Sea Food",
+            "sub_categories":[
+                "Fried Fish",
+                "Grilled Fish",
+                "Fish Curry",
+                "Baked Fish"
+            ]
+        },
+        {
+            "name":"Desserts(mithai)",
+            "sub_categories":[
+                "Halwa",
+                "Jalebi",
+                "Barfi",
+                "Kheer",
+                "Ladoo"
+            ]
+        },
+        {
+            "name":"Cold Drinks",
+            "sub_categories":[
+                "Carbonated Drinks",
+                "Juices",
+                "Milk Shakes",
+                "Energy Drinks",
+                "Flavored Waters"
+            ]
+        },
+        {
+            "name":"Tea",
+            "sub_categories":[
+                "Traditional Teas",
+                "Herbal Teas",
+                "Flavored Teas",
+                "Iced Teas"
+            ]
+        }
+    ]
+}
