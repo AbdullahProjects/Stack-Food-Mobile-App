@@ -1,5 +1,6 @@
+import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
-import 'package:food_delivery/views/main_screen/main_page.dart';
+import 'package:food_delivery/views/auth_screens/signup_screen.dart';
 import 'package:rive/rive.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(
       const Duration(seconds: 8),
       () {
-        Get.to(const MainPage());
+        Get.to(() => const SignUpScreen());
       },
     );
   }
@@ -33,21 +34,11 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Dimension.heightSize(20).heightBox,
             // logo image ======================================================
-            Image.asset(
-              ImgLogoPart1,
-              fit: BoxFit.cover,
-            )
-                .box
-                .size(
-                  Dimension.widthSize(200),
-                  Dimension.heightSize(200),
-                )
-                .make(),
+            logoContainer(),
             // rive animation ==================================================
-            Container(
-              // color: Colors.blue,
-              // width: Dimension.widthSize(400),
+            SizedBox(
               height: Dimension.heightSize(300),
               child: const RiveAnimation.asset(
                 'assets/rive/rive_loader_animation.riv',
@@ -56,7 +47,6 @@ class _SplashScreenState extends State<SplashScreen> {
           ],
         )
             .box
-            // .color(Colors.blue)
             .size(Dimension.screenWidth, Dimension.screenHeight)
             .make(),
       ),
