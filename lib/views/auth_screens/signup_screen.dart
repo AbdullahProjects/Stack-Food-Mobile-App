@@ -78,7 +78,7 @@ class SignUpScreen extends StatelessWidget {
                 Dimension.heightSize(15).heightBox,
                 mediumText(
                   text: "Have an account?",
-                  size: Dimension.widthSize(18),
+                  size: Dimension.widthSize(16),
                   color: AppColors.paraColor,
                 ).onTap(() {
                   Get.to(() => const SignInOrLoginScreen());

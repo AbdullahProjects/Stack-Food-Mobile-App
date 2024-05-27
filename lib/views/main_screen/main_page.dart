@@ -1,6 +1,6 @@
 import 'package:food_delivery/consts/consts.dart';
 import 'package:food_delivery/controllers/main_page_controller.dart';
-import 'package:food_delivery/views/cart_screen/cart_page.dart';
+import 'package:food_delivery/views/shopping_screen/shopping.dart';
 import 'package:food_delivery/views/category_screen/category_page.dart';
 import 'package:food_delivery/views/home_screen/home_page.dart';
 import 'package:food_delivery/views/profile_screen/profile_page.dart';
@@ -26,25 +26,25 @@ class MainPage extends StatelessWidget {
             Icons.home,
             size: 24,
           ),
-          label: ''),
+          label: 'Home'),
       const BottomNavigationBarItem(
           icon: Icon(
-            Icons.category,
+            Icons.restaurant_menu,
             size: 24,
           ),
-          label: ''),
+          label: 'Menu'),
       const BottomNavigationBarItem(
           icon: Icon(
-            Icons.shopping_bag,
+            Icons.shopping_cart,
             size: 24,
           ),
-          label: ''),
+          label: 'Shopping'),
       const BottomNavigationBarItem(
           icon: Icon(
             Icons.person,
             size: 24,
           ),
-          label: ''),
+          label: 'Profile'),
     ];
 
     return Scaffold(

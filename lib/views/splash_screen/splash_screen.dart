@@ -11,6 +11,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  // late RiveAnimationController riveController;
+  // Function to navigate to the SignUpScreen after a delay
   changeScreen() {
     Future.delayed(
       const Duration(seconds: 8),
@@ -22,9 +24,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    changeScreen();
     super.initState();
+    // riveController = SimpleAnimation("rive_loader_animation");
+    changeScreen();
   }
+
+  // @override
+  // void dispose() {
+  //   riveController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +51,11 @@ class _SplashScreenState extends State<SplashScreen> {
               height: Dimension.heightSize(300),
               child: const RiveAnimation.asset(
                 'assets/rive/rive_loader_animation.riv',
+                // controllers: [riveController],
               ),
             ),
           ],
-        )
-            .box
-            .size(Dimension.screenWidth, Dimension.screenHeight)
-            .make(),
+        ).box.size(Dimension.screenWidth, Dimension.screenHeight).make(),
       ),
     );
   }

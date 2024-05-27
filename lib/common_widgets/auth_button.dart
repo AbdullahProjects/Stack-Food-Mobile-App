@@ -18,7 +18,7 @@ Widget authButton(
     child: mediumText(
       text: text,
       color: textColor,
-      size: Dimension.widthSize(25),
+      size: Dimension.widthSize(20),
     ),
   ).box.makeCentered();
 }

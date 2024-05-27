@@ -76,7 +76,7 @@ class SignInOrLoginScreen extends StatelessWidget {
                   children: [
                     mediumText(
                       text: "Don't have an account?",
-                      size: Dimension.widthSize(18),
+                      size: Dimension.widthSize(16),
                       color: AppColors.paraColor,
                     ),
                     Dimension.widthSize(5).widthBox,

@@ -1,6 +1,11 @@
 import 'package:food_delivery/consts/consts.dart';
 
-Widget appIcon({icon, iconColor, backgroundColor, iconSize, onPressTask}) {
+Widget appIcon(
+    {icon,
+    iconColor,
+    backgroundColor = AppColors.mainColor,
+    iconSize,
+    onPressTask}) {
   return Center(
     child: Icon(
       icon,
@@ -10,7 +15,7 @@ Widget appIcon({icon, iconColor, backgroundColor, iconSize, onPressTask}) {
         .box
         .size(Dimension.widthSize(40), Dimension.heightSize(40))
         .roundedFull
-        .color(AppColors.mainColor)
+        .color(backgroundColor)
         .make()
         .onTap(onPressTask),
   );
