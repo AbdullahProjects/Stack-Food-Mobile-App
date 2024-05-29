@@ -1,7 +1,7 @@
 import 'package:food_delivery/consts/consts.dart';
 import 'package:food_delivery/common_widgets/common_widgets.dart';
+import 'package:food_delivery/controllers/auth_controller.dart';
 import 'package:food_delivery/views/auth_screens/sign_in_or_login_screen.dart';
-import 'package:food_delivery/views/home_screen/home_page.dart';
 import 'package:food_delivery/views/main_screen/main_page.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -9,6 +9,14 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // initialize AuthController
+    var authController = Get.put(AuthController());
+    // text fields controllers
+    var emailController = TextEditingController();
+    var passwordController = TextEditingController();
+    var phoneController = TextEditingController();
+    var nameController = TextEditingController();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.whiteColor,
@@ -25,21 +33,20 @@ class SignUpScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                // logo ==========================================================
-                // (Dimension.screenHeight * 0.04).heightBox,
+                // logo ========================================================
                 logoContainer(),
                 Dimension.heightSize(20).heightBox,
-                // input fields ==================================================
+                // input fields ================================================
                 // email text field
                 inputField(
-                  controller: null,
+                  controller: emailController,
                   hintText: "Email",
                   prefixIcon: const Icon(Icons.email),
                 ),
                 Dimension.heightSize(8).heightBox,
                 // password text field
                 inputField(
-                  controller: null,
+                  controller: passwordController,
                   hintText: "Password",
                   prefixIcon: const Icon(Icons.password_rounded),
                   isSecure: true,
@@ -48,7 +55,7 @@ class SignUpScreen extends StatelessWidget {
                 Dimension.heightSize(8).heightBox,
                 // phone text field
                 inputField(
-                  controller: null,
+                  controller: phoneController,
                   hintText: "Phone",
                   prefixIcon: const Icon(Icons.phone_android_outlined),
                   keyboard: TextInputType.phone,
@@ -56,23 +63,88 @@ class SignUpScreen extends StatelessWidget {
                 Dimension.heightSize(8).heightBox,
                 // name text field
                 inputField(
-                  controller: null,
+                  controller: nameController,
                   hintText: "Name",
                   prefixIcon: const Icon(Icons.person),
                   prefixIconColor: AppColors.textColor,
                   keyboard: TextInputType.name,
                 ),
                 Dimension.heightSize(20).heightBox,
-                // signup button =================================================
+                // signup button ===============================================
                 authButton(
                   text: "Sign Up",
-                  onPress: () {
-                    Get.to(() => const MainPage());
-                    showToast(
-                      context: context,
-                      msg: "Signup Successfully",
-                      seconds: 5000,
-                    );
+                  onPress: () async {
+                    if (emailController.text.trim() != "" &&
+                        passwordController.text.trim() != "" &&
+                        phoneController.text.trim() != "" &&
+                        nameController.text.trim() != "") {
+                      if (passwordController.text.trim().length >= 6) {
+                        if (phoneController.text.trim().length == 11) {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return loaderDialogbox(
+                                text: "Creating new account...",
+                              );
+                            },
+                          );
+                          try {
+                            await authController
+                                .emailSignupMethod(
+                              context: context,
+                              email: emailController.text,
+                              password: passwordController.text,
+                            )
+                                .then(
+                              (value) {
+                                return authController.storeUserData(
+                                  email: emailController.text,
+                                  name: nameController.text,
+                                  phoneNumber: phoneController.text,
+                                );
+                              },
+                            ).then(
+                              (value) {
+                                showToast(
+                                  context: context,
+                                  msg: "Signed Up successfully",
+                                  seconds: 5000,
+                                );
+                                // Navigator.of(context).pop();
+                                Get.offAll(() => const MainPage());
+                              },
+                            );
+                          } catch (e) {
+                            auth.signOut();
+                            Navigator.of(context).pop();
+                            showToast(
+                              context: context,
+                              msg: e.toString(),
+                              seconds: 5000,
+                            );
+                          }
+                        } else {
+                          showToast(
+                            context: context,
+                            msg: "Plz enter valid phone number!",
+                            seconds: 5000,
+                          );
+                        }
+                      } else {
+                        showToast(
+                          context: context,
+                          msg: "Min password length should be 6!",
+                          seconds: 5000,
+                        );
+                      }
+                    } else {
+                      showToast(
+                        context: context,
+                        msg: "Any field should not be blank!",
+                        seconds: 5000,
+                      );
+                    }
                   },
                 ),
                 Dimension.heightSize(15).heightBox,
@@ -83,9 +155,9 @@ class SignUpScreen extends StatelessWidget {
                 ).onTap(() {
                   Get.to(() => const SignInOrLoginScreen());
                 }),
-                Dimension.heightSize(20).heightBox,
+                Dimension.heightSize(30).heightBox,
                 regularText(
-                  text: "Sign up using one of the following methods",
+                  text: "Sign up using google",
                   color: AppColors.paraColor,
                 ),
                 Dimension.heightSize(15).heightBox,
@@ -93,27 +165,40 @@ class SignUpScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // google signup
-                    socialIcon(ImgG).onTap(() {
-                      showToast(
+                    socialIcon(ImgG).onTap(() async {
+                      showDialog(
                         context: context,
-                        msg: "Google",
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return loaderDialogbox(
+                            text: "Signing up with Google...",
+                          );
+                        },
                       );
-                    }),
-                    Dimension.widthSize(10).widthBox,
-                    // twitter signup
-                    socialIcon(ImgT).onTap(() {
-                      showToast(
-                        context: context,
-                        msg: "Twitter",
-                      );
-                    }),
-                    Dimension.widthSize(10).widthBox,
-                    // facebook signup
-                    socialIcon(ImgF).onTap(() {
-                      showToast(
-                        context: context,
-                        msg: "Facebook",
-                      );
+                      try {
+                        await authController
+                            .googleSignInMethod(context)
+                            .then((value) {
+                          if (value != null) {
+                            showToast(
+                              context: context,
+                              msg: "Sign Up successfully",
+                              seconds: 5000,
+                            );
+                            Get.offAll(() => const MainPage());
+                          } else {
+                            Navigator.of(context).pop();
+                          }
+                        });
+                      } catch (e) {
+                        auth.signOut();
+                        Navigator.of(context).pop();
+                        showToast(
+                          context: context,
+                          msg: e.toString(),
+                          seconds: 5000,
+                        );
+                      }
                     }),
                   ],
                 )

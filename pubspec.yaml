@@ -47,6 +47,9 @@ dependencies:
   rive: ^0.13.5
   flutter_speed_dial: ^7.0.0
   extended_tabs: ^4.1.0
+  fluttertoast: ^8.2.5
+  google_sign_in: ^6.2.1
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

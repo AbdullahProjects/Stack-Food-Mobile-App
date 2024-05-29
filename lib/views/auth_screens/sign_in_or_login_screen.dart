@@ -1,7 +1,8 @@
 import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
+import 'package:food_delivery/controllers/auth_controller.dart';
+import 'package:food_delivery/views/auth_screens/forgot_password.dart';
 import 'package:food_delivery/views/auth_screens/signup_screen.dart';
-import 'package:food_delivery/views/home_screen/home_page.dart';
 import 'package:food_delivery/views/main_screen/main_page.dart';
 
 class SignInOrLoginScreen extends StatelessWidget {
@@ -9,6 +10,13 @@ class SignInOrLoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // initializing AuthController
+    var authController = Get.put(AuthController());
+    // text fields controllers
+    var emailController = TextEditingController();
+    var passwordController = TextEditingController();
+    var forgotPasswordController = TextEditingController();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.whiteColor,
@@ -43,31 +51,119 @@ class SignInOrLoginScreen extends StatelessWidget {
                 Dimension.heightSize(15).heightBox,
                 // phone text field
                 inputField(
-                  controller: null,
-                  hintText: "Phone",
-                  prefixIcon: const Icon(Icons.phone_android_outlined),
-                  keyboard: TextInputType.phone,
+                  controller: emailController,
+                  hintText: "Email",
+                  prefixIcon: const Icon(Icons.email),
+                  keyboard: TextInputType.text,
                 ),
                 Dimension.heightSize(8).heightBox,
                 // password text field
                 inputField(
-                  controller: null,
+                  controller: passwordController,
                   hintText: "Password",
                   prefixIcon: const Icon(Icons.password_rounded),
                   isSecure: true,
                   keyboard: TextInputType.number,
                 ),
-                Dimension.heightSize(20).heightBox,
+                // forgot password
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return forgotPassword(
+                            controller: forgotPasswordController,
+                            onPressed: () async {
+                              if (forgotPasswordController.text.trim() != "") {
+                                try {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return loaderDialogbox(
+                                          text: "Verifying...");
+                                    },
+                                  );
+                                  await authController.forgotPassword(
+                                    forgotPasswordController.text,
+                                    context,
+                                  );
+                                  Navigator.of(context).pop();
+                                } catch (e) {
+                                  Navigator.of(context).pop();
+                                  showToast(
+                                    context: context,
+                                    msg: e.toString(),
+                                    seconds: 5000,
+                                  );
+                                }
+                              } else {
+                                showToast(
+                                  context: context,
+                                  msg: "Enter email to proceed!",
+                                  seconds: 5000,
+                                );
+                              }
+                            },
+                          );
+                        },
+                      );
+                    },
+                    child: mediumText(
+                      text: "Forgot Password?",
+                    ),
+                  ),
+                ),
                 // sign in button ==============================================
                 authButton(
                   text: "Sign In",
-                  onPress: () {
-                    Get.to(() => const MainPage());
-                    showToast(
-                      context: context,
-                      msg: "Sign In Successfully",
-                      seconds: 5000,
-                    );
+                  onPress: () async {
+                    if (emailController.text.trim() != "" &&
+                        passwordController.text.trim() != "") {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return loaderDialogbox(text: "Verifying...");
+                        },
+                      );
+                      try {
+                        await authController
+                            .emailLoginMethod(
+                          context: context,
+                          email: emailController.text,
+                          password: passwordController.text,
+                        )
+                            .then((value) {
+                          if (value != null) {
+                            showToast(
+                              context: context,
+                              msg: "Signed In successfully",
+                              seconds: 5000,
+                            );
+                            // Navigator.of(context).pop();
+                            Get.offAll(() => const MainPage());
+                          } else {
+                            Navigator.of(context).pop();
+                          }
+                        });
+                      } catch (e) {
+                        Navigator.of(context).pop();
+                        showToast(
+                          context: context,
+                          msg: e.toString(),
+                          seconds: 5000,
+                        );
+                      }
+                    } else {
+                      showToast(
+                        context: context,
+                        msg: "Any field should not be blank!",
+                        seconds: 5000,
+                      );
+                    }
                   },
                 ),
                 Dimension.heightSize(15).heightBox,
@@ -91,9 +187,9 @@ class SignInOrLoginScreen extends StatelessWidget {
                     ),
                   ],
                 ).box.makeCentered(),
-                Dimension.heightSize(20).heightBox,
+                Dimension.heightSize(30).heightBox,
                 regularText(
-                  text: "Sign in using one of the following methods",
+                  text: "Sign in using google",
                   color: AppColors.paraColor,
                 ).box.makeCentered(),
                 Dimension.heightSize(15).heightBox,
@@ -101,27 +197,36 @@ class SignInOrLoginScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // google signup
-                    socialIcon(ImgG).onTap(() {
-                      showToast(
+                    socialIcon(ImgG).onTap(() async {
+                      showDialog(
                         context: context,
-                        msg: "Google",
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return loaderDialogbox(
+                            text: "Signing in with Google...",
+                          );
+                        },
                       );
-                    }),
-                    Dimension.widthSize(10).widthBox,
-                    // twitter signup
-                    socialIcon(ImgT).onTap(() {
-                      showToast(
-                        context: context,
-                        msg: "Twitter",
-                      );
-                    }),
-                    Dimension.widthSize(10).widthBox,
-                    // facebook signup
-                    socialIcon(ImgF).onTap(() {
-                      showToast(
-                        context: context,
-                        msg: "Facebook",
-                      );
+                      try {
+                        await authController.googleSignInMethod(context).then(
+                          (value) {
+                            showToast(
+                              context: context,
+                              msg: "Signed In successfully",
+                              seconds: 5000,
+                            );
+                            Get.offAll(() => const MainPage());
+                          },
+                        );
+                      } catch (e) {
+                        auth.signOut();
+                        Navigator.of(context).pop();
+                        showToast(
+                          context: context,
+                          msg: e.toString(),
+                          seconds: 5000,
+                        );
+                      }
                     }),
                   ],
                 )

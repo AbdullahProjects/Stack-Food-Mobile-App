@@ -1,11 +1,12 @@
 import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
 
-Widget authButton(
-    {text,
-    textColor = AppColors.whiteColor,
-    backgroundColor = AppColors.mainColor,
-    onPress}) {
+Widget authButton({
+  text,
+  textColor = AppColors.whiteColor,
+  backgroundColor = AppColors.mainColor,
+  onPress,
+}) {
   return ElevatedButton(
     onPressed: onPress,
     style: ElevatedButton.styleFrom(

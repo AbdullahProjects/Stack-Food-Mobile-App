@@ -39,6 +39,7 @@ Widget inputField(
       controller: controller,
       obscureText: isSecure,
       keyboardType: keyboard,
+      autofocus: false,
       cursorColor: AppColors.mainColor,
       decoration: InputDecoration(
         hintText: hintText,

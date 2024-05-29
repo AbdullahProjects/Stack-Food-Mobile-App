@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
+import 'package:food_delivery/views/auth_screens/sign_in_or_login_screen.dart';
 import 'package:food_delivery/views/auth_screens/signup_screen.dart';
+import 'package:food_delivery/views/main_screen/main_page.dart';
 import 'package:rive/rive.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,6 +20,14 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(
       const Duration(seconds: 8),
       () {
+        // if user already login then go to Home Screen, otherwise go to Login Screen
+        auth.authStateChanges().listen((User? user) {
+          if (user == null) {
+            Get.to(() => const SignInOrLoginScreen());
+          } else {
+            Get.to(() => const MainPage());
+          }
+        });
         Get.to(() => const SignUpScreen());
       },
     );
