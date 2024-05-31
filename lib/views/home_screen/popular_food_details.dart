@@ -2,6 +2,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
+import 'package:food_delivery/controllers/food_controller.dart';
+import 'package:food_delivery/controllers/shopping_controller.dart';
 import 'package:food_delivery/views/home_screen/components/handle_comments.dart';
 import 'package:food_delivery/views/home_screen/components/home_page_food_row.dart';
 
@@ -14,12 +16,17 @@ class PopularFoodDetails extends StatelessWidget {
   String location;
   String time;
   String foodDesc;
+  String price;
   PopularFoodDetails(this.foodImage, this.foodName, this.rating, this.comments,
-      this.desc, this.location, this.foodDesc, this.time,
+      this.desc, this.location, this.foodDesc, this.time, this.price,
       {super.key});
 
   @override
   Widget build(BuildContext context) {
+    var foodController = Get.put(FoodController());
+    var cartController = Get.put(ShoppingController());
+    foodController.resetValues();
+
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       body: Stack(
@@ -28,7 +35,7 @@ class PopularFoodDetails extends StatelessWidget {
           Positioned(
             left: 0,
             top: 0,
-            child: Image.asset(
+            child: Image.network(
               foodImage,
               fit: BoxFit.cover,
             )
@@ -116,7 +123,7 @@ class PopularFoodDetails extends StatelessWidget {
                           pause: const Duration(milliseconds: 5000),
                           animatedTexts: [
                             TyperAnimatedText(
-                              "Rs. 1200",
+                              "Rs. $price",
                               textStyle: TextStyle(
                                 fontFamily: robotoBlack,
                                 color: AppColors.iconColor2,
@@ -137,7 +144,7 @@ class PopularFoodDetails extends StatelessWidget {
                           selectionColor: AppColors.mainColor,
                           isSelectable: false,
                           value: double.parse(rating),
-                          size: Dimension.widthSize(13), //13
+                          size: Dimension.widthSize(13),
                           onRatingUpdate: (value) {},
                         ),
                         Dimension.widthSize(5).widthBox,
@@ -215,49 +222,83 @@ class PopularFoodDetails extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // plus or minus counts ============================================
+            // plus or minus counts
             Container(
               padding: EdgeInsets.symmetric(
-                  horizontal: Dimension.widthSize(20),
-                  vertical: Dimension.heightSize(20)),
+                  horizontal: Dimension.widthSize(10),
+                  vertical: Dimension.heightSize(15)),
               decoration: BoxDecoration(
                   color: AppColors.whiteColor,
-                  borderRadius: BorderRadius.circular(Dimension.widthSize(20))),
+                  borderRadius: BorderRadius.circular(Dimension.widthSize(10))),
               child: Row(
                 children: [
                   Icon(
                     Icons.remove,
                     color: AppColors.signColor,
-                    size: Dimension.widthSize(17),
-                  ),
-                  Dimension.widthSize(5).widthBox,
-                  mediumText(
-                      text: "0",
+                    size: Dimension.widthSize(20),
+                  ).onTap(() {
+                    foodController.decreaseQuantity();
+                    foodController.calculateTotalPrice(int.parse(price));
+                  }),
+                  Dimension.widthSize(8).widthBox,
+                  Obx(() => mediumText(
+                      text: "${foodController.quantity.value}",
                       color: AppColors.blackColor,
-                      size: Dimension.widthSize(17)),
-                  Dimension.widthSize(5).widthBox,
+                      size: Dimension.widthSize(17))),
+                  Dimension.widthSize(8).widthBox,
                   Icon(
                     Icons.add,
                     color: AppColors.signColor,
-                    size: Dimension.widthSize(17),
-                  ),
+                    size: Dimension.widthSize(20),
+                  ).onTap(() {
+                    foodController.addQuantity();
+                    foodController.calculateTotalPrice(int.parse(price));
+                  }),
                 ],
               ),
             ),
-            // add to cart =====================================================
-            Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: Dimension.widthSize(20),
-                  vertical: Dimension.heightSize(20)),
-              decoration: BoxDecoration(
-                color: AppColors.mainColor,
-                borderRadius: BorderRadius.circular(Dimension.widthSize(20)),
-              ),
-              child: mediumText(
-                  text: "340 Rs. Add to Cart",
-                  color: AppColors.whiteColor,
-                  size: Dimension.widthSize(17)),
-            )
+            // add to cart
+            Obx(
+              () => Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: Dimension.widthSize(10),
+                      vertical: Dimension.heightSize(15)),
+                  decoration: BoxDecoration(
+                    color: AppColors.mainColor,
+                    borderRadius:
+                        BorderRadius.circular(Dimension.widthSize(10)),
+                  ),
+                  child: mediumText(
+                    text: "${foodController.totalPrice.value} Rs. Add to Cart",
+                    color: AppColors.whiteColor,
+                    size: Dimension.widthSize(17),
+                  )).onTap(() async {
+                if (foodController.quantity.value > 0) {
+                  try {
+                    await cartController.addToCart(
+                      uid: currentUser!.uid,
+                      foodImg: foodImage,
+                      foodName: foodName,
+                      foodPrice: price,
+                      qty: foodController.quantity.value,
+                      totalPrice: foodController.totalPrice.value,
+                    );
+                    showToast(
+                        context: context,
+                        msg: "$foodName added to cart!",
+                        seconds: 3000);
+                  } catch (e) {
+                    showToast(
+                        context: context, msg: e.toString(), seconds: 5000);
+                  }
+                } else {
+                  showToast(
+                      context: context,
+                      msg: "Minimum 1 quantity required to order food!",
+                      seconds: 3000);
+                }
+              }),
+            ),
           ],
         ),
       ),

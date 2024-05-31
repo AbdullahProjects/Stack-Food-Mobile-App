@@ -3,16 +3,19 @@
         {
             "name":"Biryani and Rice Dishes",
             "sub_categories":[
+                "All",
                 "Chicken Biryani",
                 "Beef Biryani",
                 "Sindhi Biryani",
-                "Pulao(Chicken or Beef)"
+                "Pulao(Chicken or Beef)",
+                "Dall Chawal"
             ]
         },
         {
             "name":"Curries",
             "sub_categories":[
-                "Chicken Karachai",
+                "All",
+                "Chicken Karahai",
                 "Beef Nihari",
                 "Mutton Korma"
             ]
@@ -20,6 +23,7 @@
         {
             "name":"Breads(roti)",
             "sub_categories":[
+                "All",
                 "Naan",
                 "Tandoori Roti",
                 "Chapati",
@@ -29,6 +33,7 @@
         {
             "name":"Grilled and BBQ",
             "sub_categories":[
+                "All",
                 "Seekh Kebabs",
                 "Checken Tikka",
                 "Malai Boti"
@@ -37,6 +42,7 @@
         {
             "name":"Snacks and Street Food",
             "sub_categories":[
+                "All",
                 "Samosas",
                 "Pakoras",
                 "Chaat",
@@ -47,6 +53,7 @@
         {
             "name":"Vegetarian Dishes",
             "sub_categories":[
+                "All",
                 "Palak Paneer",
                 "Chana Masala",
                 "Aloo Gobi",
@@ -56,6 +63,7 @@
         {
             "name":"Lentils and Beans",
             "sub_categories":[
+                "All",
                 "Dal Makhani",
                 "Chana Dal",
                 "Masoor Dal",
@@ -65,6 +73,7 @@
         {
             "name":"Desi Breakfast",
             "sub_categories":[
+                "All",
                 "Paratha",
                 "Halwa Puri",
                 "Nihari",
@@ -74,6 +83,7 @@
         {
             "name":"Sea Food",
             "sub_categories":[
+                "All",
                 "Fried Fish",
                 "Grilled Fish",
                 "Fish Curry",
@@ -83,6 +93,7 @@
         {
             "name":"Desserts(mithai)",
             "sub_categories":[
+                "All",
                 "Halwa",
                 "Jalebi",
                 "Barfi",
@@ -93,6 +104,7 @@
         {
             "name":"Cold Drinks",
             "sub_categories":[
+                "All",
                 "Carbonated Drinks",
                 "Juices",
                 "Milk Shakes",
@@ -103,6 +115,7 @@
         {
             "name":"Tea",
             "sub_categories":[
+                "All",
                 "Traditional Teas",
                 "Herbal Teas",
                 "Flavored Teas",

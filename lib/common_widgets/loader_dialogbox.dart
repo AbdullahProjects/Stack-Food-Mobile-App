@@ -3,7 +3,7 @@ import 'package:food_delivery/consts/consts.dart';
 
 Widget loaderDialogbox({
   text,
-  textColor = AppColors.mainColor,
+  textColor = AppColors.mainBlackColor,
   loaderColor = AppColors.mainColor,
   bgColor = AppColors.whiteColor,
 }) {

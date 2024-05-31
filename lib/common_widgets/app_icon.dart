@@ -1,6 +1,6 @@
 import 'package:food_delivery/consts/consts.dart';
 
-Widget appIcon(
+Widget  appIcon(
     {icon,
     iconColor,
     backgroundColor = AppColors.mainColor,

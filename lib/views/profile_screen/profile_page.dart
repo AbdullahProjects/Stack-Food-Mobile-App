@@ -1,20 +1,31 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
 import 'package:food_delivery/controllers/auth_controller.dart';
+import 'package:food_delivery/controllers/profile_controller.dart';
 import 'package:food_delivery/services/firestore_services.dart';
 import 'package:food_delivery/views/auth_screens/sign_in_or_login_screen.dart';
 import 'package:food_delivery/views/profile_screen/components/count_info.dart';
 import 'package:food_delivery/views/profile_screen/components/info_row.dart';
+import 'package:food_delivery/views/profile_screen/edit_profile_page.dart';
 import 'package:food_delivery/views/profile_screen/orders_screen.dart';
+import 'package:food_delivery/views/profile_screen/settings_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var data;
+    var profileController = Get.put(ProfileController());
+    print("===============");
+    print(profileController.isLoading.value);
+    print("====================");
+    print(profileController.isPhoneVerified.value);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -36,7 +47,13 @@ class ProfilePage extends StatelessWidget {
             return Container();
           } else {
             // storing data
-            var data = snapshot.data!.docs[0];
+            data = snapshot.data!.docs[0];
+            // get phone number
+            profileController.phoneNumber.value =
+                "+92 ${data['phoneNumber'].substring(
+              1,
+            )}";
+            profileController.isPhoneVerified.value = data["phone_verified"];
 
             return SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -49,19 +66,40 @@ class ProfilePage extends StatelessWidget {
                 child: Column(
                   children: [
                     Dimension.heightSize(10).heightBox,
-                    // profile picture ===============================================
-                    Icon(
-                      Icons.person,
-                      size: Dimension.widthSize(50),
-                      color: AppColors.whiteColor,
-                    )
-                        .box
-                        .color(AppColors.mainColor)
-                        .size(Dimension.widthSize(90), Dimension.heightSize(90))
-                        .roundedFull
-                        .make(),
+                    // profile picture =========================================
+                    Container(
+                      width: Dimension.widthSize(90),
+                      height: Dimension.heightSize(90),
+                      decoration: BoxDecoration(
+                        color: AppColors.mainColor,
+                        borderRadius: BorderRadius.circular(45),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          45,
+                        ),
+                        child: data["imageURL"] == "" &&
+                                profileController.profileImgPath.isEmpty
+                            ? Icon(
+                                Icons.person,
+                                size: Dimension.widthSize(50),
+                                color: AppColors.whiteColor,
+                              )
+                            : data["imageURL"] != "" &&
+                                    profileController.profileImgPath.isEmpty
+                                ? Image.network(
+                                    data["imageURL"],
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.file(
+                                    File(
+                                        profileController.profileImgPath.value),
+                                    fit: BoxFit.cover,
+                                  ),
+                      ),
+                    ),
                     Dimension.heightSize(20).heightBox,
-                    // orders, cars, wishlist count ==================================
+                    // orders, cars, wishlist count ============================
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
@@ -191,10 +229,12 @@ class ProfilePage extends StatelessWidget {
                 fontSize: Dimension.widthSize(14), color: AppColors.blackColor),
             labelBackgroundColor: AppColors.iconColor1,
             onTap: () {
-              showToast(
-                context: context,
-                msg: "Edit Profile Info",
-              );
+              // giving data to text fields of edit personal info page =========
+              profileController.nameController.text = data["name"];
+              profileController.phoneController.text = data["phoneNumber"];
+              profileController.addressController.text = data["address"];
+              // going towards edit profile screen =============================
+              Get.to(() => EditProfilePage(data: data));
             },
           ),
           SpeedDialChild(
@@ -209,10 +249,8 @@ class ProfilePage extends StatelessWidget {
                 fontSize: Dimension.widthSize(14), color: Colors.white),
             labelBackgroundColor: AppColors.iconColor2,
             onTap: () {
-              showToast(
-                context: context,
-                msg: "Settings",
-              );
+              // going towards settings screen =================================
+              Get.to(() => const SettingsPage());
             },
           ),
         ],

@@ -3,14 +3,10 @@ import 'package:food_delivery/consts/consts.dart';
 import 'package:food_delivery/views/home_screen/components/home_page_food_row.dart';
 
 Widget popularFoodPairing(
-    {img,
-    foodName,
-    foodIcon1Detail,
-    foodIcon2Detail,
-    foodIcon3Detail}) {
+    {img, foodName, foodIcon1Detail, foodIcon2Detail, foodIcon3Detail}) {
   return Row(
     children: [
-      Image.asset(
+      Image.network(
         img,
         fit: BoxFit.cover,
       )

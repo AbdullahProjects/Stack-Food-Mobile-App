@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
+import 'package:food_delivery/controllers/shopping_controller.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var cartController = Get.put(ShoppingController());
+
     return Stack(
       children: [
         Padding(
@@ -20,52 +24,104 @@ class CartScreen extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                ListView.builder(
-                  itemCount: 10,
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      subtitleTextStyle: TextStyle(
-                        color: AppColors.iconColor2,
-                        fontSize: Dimension.widthSize(16),
-                        fontWeight: FontWeight.w700,
-                      ),
-                      title: mediumText(
-                        text: "Food name",
-                        size: Dimension.widthSize(16),
-                        isOverflow: true,
-                      ),
-                      subtitle: const Text("Rs. 2000"),
-                      leading: Image.asset(
-                        ImgFood0,
-                        width: 80,
-                        fit: BoxFit.cover,
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.remove,
-                            color: AppColors.signColor,
-                            size: Dimension.widthSize(17),
-                          ),
-                          Dimension.widthSize(5).widthBox,
-                          mediumText(
-                              text: "2",
-                              color: AppColors.blackColor,
-                              size: Dimension.widthSize(17)),
-                          Dimension.widthSize(5).widthBox,
-                          Icon(
-                            Icons.add,
-                            color: AppColors.signColor,
-                            size: Dimension.widthSize(17),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                StreamBuilder(
+                    stream: cartController.getCart(currentUser!.uid),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center();
+                      } else if (snapshot.data!.docs.isEmpty) {
+                        return Center(
+                          child: mediumText(
+                            text: "Cart is Empty!",
+                            size: Dimension.widthSize(16),
+                            color: AppColors.textColor,
+                          )
+                              .box
+                              .margin(
+                                EdgeInsets.only(top: Dimension.heightSize(50)),
+                              )
+                              .make(),
+                        );
+                      } else {
+                        var cartData = snapshot.data!.docs;
+
+                        return ListView.builder(
+                          itemCount: cartData.length,
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              subtitleTextStyle: TextStyle(
+                                color: AppColors.iconColor2,
+                                fontSize: Dimension.widthSize(16),
+                                fontWeight: FontWeight.w700,
+                              ),
+                              title: mediumText(
+                                text: "${cartData[index]["food_name"]}",
+                                size: Dimension.widthSize(16),
+                                isOverflow: true,
+                              ),
+                              subtitle: Row(
+                                children: [
+                                  mediumText(
+                                    text:
+                                        "( Rs. ${cartData[index]["food_price"]}",
+                                    isOverflow: true,
+                                    color: AppColors.titleColor,
+                                  ),
+                                  mediumText(
+                                    text: " x ",
+                                    isOverflow: true,
+                                    color: AppColors.titleColor,
+                                  ),
+                                  mediumText(
+                                    text: "${cartData[index]["quantity"]}) ",
+                                    isOverflow: true,
+                                    color: AppColors.titleColor,
+                                  ),
+                                  mediumText(
+                                    text:
+                                        " Rs. ${cartData[index]["totalPrice"]}",
+                                    isOverflow: true,
+                                    color: AppColors.iconColor2,
+                                  ),
+                                ],
+                              ),
+                              leading: SizedBox(
+                                width: Dimension.widthSize(75),
+                                height: Dimension.heightSize(60),
+                                child: Image.network(
+                                  "${cartData[index]["food_img"]}",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.remove,
+                                    color: AppColors.signColor,
+                                    size: Dimension.widthSize(16),
+                                  ),
+                                  Dimension.widthSize(5).widthBox,
+                                  mediumText(
+                                      text: cartData[index]["quantity"],
+                                      color: AppColors.blackColor,
+                                      size: Dimension.widthSize(16)),
+                                  Dimension.widthSize(5).widthBox,
+                                  Icon(
+                                    Icons.add,
+                                    color: AppColors.signColor,
+                                    size: Dimension.widthSize(16),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    })
               ],
             ),
           ),

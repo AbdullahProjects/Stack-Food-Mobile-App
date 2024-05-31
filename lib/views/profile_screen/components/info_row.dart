@@ -40,11 +40,11 @@ Widget infoRow({
                       children: [
                         Icon(
                           Icons.check,
-                          color: AppColors.whiteColor,
+                          color: Colors.green,
                           size: Dimension.widthSize(15),
                         )
                             .box
-                            .color(AppColors.paraColor)
+                            .color(const Color.fromARGB(255, 238, 235, 235))
                             .padding(EdgeInsets.symmetric(
                                 horizontal: Dimension.widthSize(7),
                                 vertical: Dimension.heightSize(5)))
@@ -67,11 +67,11 @@ Widget infoRow({
                       children: [
                         Icon(
                           Icons.close,
-                          color: AppColors.whiteColor,
+                          color: Colors.red,
                           size: Dimension.widthSize(15),
                         )
                             .box
-                            .color(AppColors.paraColor)
+                            .color(const Color.fromARGB(255, 238, 235, 235))
                             .padding(EdgeInsets.symmetric(
                                 horizontal: Dimension.widthSize(7),
                                 vertical: Dimension.heightSize(5)))

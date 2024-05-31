@@ -4,7 +4,6 @@ import 'package:food_delivery/consts/consts.dart';
 import 'package:food_delivery/views/auth_screens/sign_in_or_login_screen.dart';
 import 'package:food_delivery/views/auth_screens/signup_screen.dart';
 import 'package:food_delivery/views/main_screen/main_page.dart';
-import 'package:rive/rive.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,11 +13,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // late RiveAnimationController riveController;
   // Function to navigate to the SignUpScreen after a delay
   changeScreen() {
     Future.delayed(
-      const Duration(seconds: 8),
+      const Duration(seconds: 5),
       () {
         // if user already login then go to Home Screen, otherwise go to Login Screen
         auth.authStateChanges().listen((User? user) {
@@ -36,15 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // riveController = SimpleAnimation("rive_loader_animation");
     changeScreen();
   }
-
-  // @override
-  // void dispose() {
-  //   riveController.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +48,16 @@ class _SplashScreenState extends State<SplashScreen> {
             Dimension.heightSize(20).heightBox,
             // logo image ======================================================
             logoContainer(),
-            // rive animation ==================================================
-            SizedBox(
-              height: Dimension.heightSize(300),
-              child: const RiveAnimation.asset(
-                'assets/rive/rive_loader_animation.riv',
-                // controllers: [riveController],
-              ),
+            // best food logo ==================================================
+            Image.asset(
+              ImgLogoPart2,
+              width: Dimension.screenWidth / 1.8,
+            ),
+            Dimension.heightSize(100).heightBox,
+            // restaurant name logo ============================================
+            Image.asset(
+              ImgLogoName,
+              width: Dimension.screenWidth / 1.6,
             ),
           ],
         ).box.size(Dimension.screenWidth, Dimension.screenHeight).make(),

@@ -13,7 +13,6 @@ Widget customSlider(
     desc,
     location,
     time}) {
-
   return SingleChildScrollView(
     scrollDirection: Axis.vertical,
     child: Column(
@@ -22,7 +21,7 @@ Widget customSlider(
         Stack(
           children: [
             // Food Image
-            Image.asset(
+            Image.network(
               foodImage,
               fit: BoxFit.cover,
             )
@@ -74,7 +73,8 @@ Widget customSlider(
                             ),
                             Dimension.widthSize(5).widthBox,
                             mediumText(
-                              text: roundedComment(commentsCount: commentsCount),
+                              text:
+                                  roundedComment(commentsCount: commentsCount),
                               color: AppColors.signColor,
                               size: Dimension.widthSize(14),
                             ),
