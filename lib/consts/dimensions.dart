@@ -17,8 +17,8 @@ class Dimension {
 
   // home_page.dart ============================================================
   // slider
-  static double swiperHeight = screenHeight / 2.46; // screenHeight / 260
-  static double swiperImageHeight = screenHeight / 3.37; // screenHeight / 190
-  static double swiperFoodInfoHeight = screenHeight / 6.4; // screenHeight / 100
-  static double swiperStackHeight = screenHeight / 2.91; // screenHeight / 220
+  static double swiperHeight = screenHeight / 2.46; 
+  static double swiperImageHeight = screenHeight / 3.37; 
+  static double swiperFoodInfoHeight = screenHeight / 6.4; 
+  static double swiperStackHeight = screenHeight / 2.91;
 }

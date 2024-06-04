@@ -4,6 +4,7 @@ import 'package:food_delivery/common_widgets/text_styles.dart';
 import 'package:food_delivery/consts/consts.dart';
 import 'package:food_delivery/views/shopping_screen/cart_screen.dart';
 import 'package:food_delivery/views/shopping_screen/favourite_screen.dart';
+import 'package:food_delivery/views/shopping_screen/orders_screen.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -19,7 +20,7 @@ class _CartPageState extends State<CartPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -33,7 +34,7 @@ class _CartPageState extends State<CartPage>
     return Scaffold(
       appBar: AppBar(
         title: mediumText(
-          text: "My Favourites & Cart",
+          text: "My Shopping Info",
           color: AppColors.whiteColor,
           size: Dimension.widthSize(20),
         ),
@@ -61,10 +62,13 @@ class _CartPageState extends State<CartPage>
               ),
               tabs: const [
                 Tab(
-                  text: "Your Cart",
+                  text: "Cart",
                 ),
                 Tab(
-                  text: "Your Favourites",
+                  text: "Favourites",
+                ),
+                Tab(
+                  text: "Orders",
                 ),
               ],
             ),
@@ -76,6 +80,7 @@ class _CartPageState extends State<CartPage>
               children: const [
                 CartScreen(),
                 FavouriteScreen(),
+                OrdersScreen(),
               ],
             ),
           ),

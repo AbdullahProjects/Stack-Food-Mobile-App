@@ -18,16 +18,16 @@ class SignUpScreen extends StatelessWidget {
     var nameController = TextEditingController();
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.whiteColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          physics: const BouncingScrollPhysics(),
+          // scrollDirection: Axis.vertical,
+          // physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.only(
               top: Dimension.heightSize(30),
-              bottom: Dimension.heightSize(80),
+              bottom: Dimension.heightSize(30),
               left: Dimension.widthSize(20),
               right: Dimension.widthSize(20),
             ),

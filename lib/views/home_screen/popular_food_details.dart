@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
@@ -17,8 +17,18 @@ class PopularFoodDetails extends StatelessWidget {
   String time;
   String foodDesc;
   String price;
-  PopularFoodDetails(this.foodImage, this.foodName, this.rating, this.comments,
-      this.desc, this.location, this.foodDesc, this.time, this.price,
+  String docId;
+  PopularFoodDetails(
+      this.foodImage,
+      this.foodName,
+      this.rating,
+      this.comments,
+      this.desc,
+      this.location,
+      this.foodDesc,
+      this.time,
+      this.price,
+      this.docId,
       {super.key});
 
   @override
@@ -62,16 +72,65 @@ class PopularFoodDetails extends StatelessWidget {
                 Column(
                   children: [
                     appIcon(
-                        icon: Icons.shopping_cart,
-                        iconColor: AppColors.whiteColor,
-                        iconSize: Dimension.widthSize(20),
-                        onPressTask: () {}),
+                      icon: Icons.shopping_cart,
+                      iconColor: AppColors.whiteColor,
+                      iconSize: Dimension.widthSize(20),
+                      onPressTask: () async {
+                        if (foodController.quantity.value > 0) {
+                          try {
+                            await cartController.addToCart(
+                              uid: currentUser!.uid,
+                              foodImg: foodImage,
+                              foodName: foodName,
+                              foodPrice: price,
+                              qty: foodController.quantity.value,
+                              totalPrice: foodController.totalPrice.value,
+                            );
+                            showToast(
+                              context: context,
+                              msg: "$foodName added to cart!",
+                              seconds: 3000,
+                            );
+                            // await cartController.getTotalCartItemsPrice();
+                          } catch (e) {
+                            showToast(
+                                context: context,
+                                msg: e.toString(),
+                                seconds: 5000);
+                          }
+                        } else {
+                          showToast(
+                              context: context,
+                              msg: "Minimum 1 quantity required to order food!",
+                              seconds: 3000);
+                        }
+                      },
+                    ),
                     Dimension.heightSize(10).heightBox,
-                    appIcon(
-                        icon: Icons.favorite,
+                    Obx(
+                      () => appIcon(
+                        icon: cartController.isFav.value
+                            ? Icons.favorite
+                            : Icons.favorite_border,
                         iconColor: AppColors.whiteColor,
                         iconSize: Dimension.widthSize(20),
-                        onPressTask: () {}),
+                        onPressTask: () async {
+                          try {
+                            if (cartController.isFav.value) {
+                              cartController.removeToFavourite(docId, context);
+                            } else {
+                              cartController.addToFavourite(docId, context);
+                            }
+                          } catch (e) {
+                            showToast(
+                              context: context,
+                              msg: e.toString(),
+                              seconds: 5000,
+                            );
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -272,32 +331,36 @@ class PopularFoodDetails extends StatelessWidget {
                     text: "${foodController.totalPrice.value} Rs. Add to Cart",
                     color: AppColors.whiteColor,
                     size: Dimension.widthSize(17),
-                  )).onTap(() async {
-                if (foodController.quantity.value > 0) {
-                  try {
-                    await cartController.addToCart(
-                      uid: currentUser!.uid,
-                      foodImg: foodImage,
-                      foodName: foodName,
-                      foodPrice: price,
-                      qty: foodController.quantity.value,
-                      totalPrice: foodController.totalPrice.value,
-                    );
-                    showToast(
+                  )).onTap(
+                () async {
+                  if (foodController.quantity.value > 0) {
+                    try {
+                      await cartController.addToCart(
+                        uid: currentUser!.uid,
+                        foodImg: foodImage,
+                        foodName: foodName,
+                        foodPrice: price,
+                        qty: foodController.quantity.value,
+                        totalPrice: foodController.totalPrice.value,
+                      );
+                      showToast(
                         context: context,
                         msg: "$foodName added to cart!",
-                        seconds: 3000);
-                  } catch (e) {
+                        seconds: 3000,
+                      );
+                      // await cartController.getTotalCartItemsPrice();
+                    } catch (e) {
+                      showToast(
+                          context: context, msg: e.toString(), seconds: 5000);
+                    }
+                  } else {
                     showToast(
-                        context: context, msg: e.toString(), seconds: 5000);
+                        context: context,
+                        msg: "Minimum 1 quantity required to order food!",
+                        seconds: 3000);
                   }
-                } else {
-                  showToast(
-                      context: context,
-                      msg: "Minimum 1 quantity required to order food!",
-                      seconds: 3000);
-                }
-              }),
+                },
+              ),
             ),
           ],
         ),

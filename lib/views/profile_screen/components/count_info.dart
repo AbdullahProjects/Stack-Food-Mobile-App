@@ -16,11 +16,11 @@ Widget countInfo({title, count}) {
         size: Dimension.widthSize(16),
       ),
       Dimension.heightSize(5).heightBox,
-      mediumText(
-        text: "check >>",
-        size: Dimension.widthSize(14),
-        color: AppColors.mainColor,
-      ),
+      // mediumText(
+      //   text: "check >>",
+      //   size: Dimension.widthSize(14),
+      //   color: AppColors.mainColor,
+      // ),
     ],
   )
       .box

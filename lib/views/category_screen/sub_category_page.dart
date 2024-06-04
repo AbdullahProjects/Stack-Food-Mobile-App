@@ -138,6 +138,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                                 foodData[index]["description"],
                                 foodData[index]["time"],
                                 foodData[index]["price"],
+                                foodData[index].id,
                               ),
                             );
                           },

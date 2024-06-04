@@ -11,7 +11,7 @@ import 'package:food_delivery/views/auth_screens/sign_in_or_login_screen.dart';
 import 'package:food_delivery/views/profile_screen/components/count_info.dart';
 import 'package:food_delivery/views/profile_screen/components/info_row.dart';
 import 'package:food_delivery/views/profile_screen/edit_profile_page.dart';
-import 'package:food_delivery/views/profile_screen/orders_screen.dart';
+import 'package:food_delivery/views/shopping_screen/orders_screen.dart';
 import 'package:food_delivery/views/profile_screen/settings_page.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -21,10 +21,6 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var data;
     var profileController = Get.put(ProfileController());
-    print("===============");
-    print(profileController.isLoading.value);
-    print("====================");
-    print(profileController.isPhoneVerified.value);
 
     return Scaffold(
       appBar: AppBar(
@@ -116,11 +112,7 @@ class ProfilePage extends StatelessWidget {
                           Dimension.widthSize(10).widthBox,
                           // orders
                           countInfo(
-                                  title: "My Orders",
-                                  count: data["orders_count"])
-                              .onTap(() {
-                            Get.to(() => const OrdersScreen());
-                          }),
+                              title: "My Orders", count: data["orders_count"]),
                         ],
                       )
                           .box

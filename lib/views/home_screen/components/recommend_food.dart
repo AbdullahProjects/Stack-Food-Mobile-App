@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
 import 'package:food_delivery/controllers/food_controller.dart';
@@ -16,6 +16,7 @@ class RecommendFoodDetails extends StatelessWidget {
   String time;
   String foodDesc;
   String price;
+  String docId;
   RecommendFoodDetails(
       this.foodImage,
       this.foodName,
@@ -26,6 +27,7 @@ class RecommendFoodDetails extends StatelessWidget {
       this.location,
       this.time,
       this.price,
+      this.docId,
       {super.key});
 
   @override
@@ -57,7 +59,36 @@ class RecommendFoodDetails extends StatelessWidget {
                     icon: Icons.shopping_cart,
                     iconColor: AppColors.whiteColor,
                     iconSize: Dimension.widthSize(20),
-                    onPressTask: () {}),
+                    onPressTask: () async {
+                      if (foodController.quantity.value > 0) {
+                        try {
+                          await cartController.addToCart(
+                            uid: currentUser!.uid,
+                            foodImg: foodImage,
+                            foodName: foodName,
+                            foodPrice: price,
+                            qty: foodController.quantity.value,
+                            totalPrice: foodController.totalPrice.value,
+                          );
+                          showToast(
+                            context: context,
+                            msg: "$foodName added to cart!",
+                            seconds: 3000,
+                          );
+                          // await cartController.getTotalCartItemsPrice();
+                        } catch (e) {
+                          showToast(
+                              context: context,
+                              msg: e.toString(),
+                              seconds: 5000);
+                        }
+                      } else {
+                        showToast(
+                            context: context,
+                            msg: "Minimum 1 quantity required to order food!",
+                            seconds: 3000);
+                      }
+                    }),
               ],
             )
                 .box
@@ -220,7 +251,7 @@ class RecommendFoodDetails extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // plus or minus counts ============================================
+                // favourite icon ==============================================
                 Container(
                   padding: EdgeInsets.symmetric(
                       horizontal: Dimension.widthSize(15),
@@ -229,16 +260,34 @@ class RecommendFoodDetails extends StatelessWidget {
                       color: AppColors.whiteColor,
                       borderRadius:
                           BorderRadius.circular(Dimension.widthSize(15))),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.favorite,
-                        color: AppColors.mainColor,
-                        size: Dimension.widthSize(20),
-                      ),
-                    ],
+                  child: Obx(
+                    () => Row(
+                      children: [
+                        Icon(
+                          cartController.isFav.value
+                              ? Icons.favorite
+                              : Icons.favorite_border_rounded,
+                          color: AppColors.mainColor,
+                          size: Dimension.widthSize(20),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ).onTap(() async {
+                  try {
+                    if (cartController.isFav.value) {
+                      cartController.removeToFavourite(docId, context);
+                    } else {
+                      cartController.addToFavourite(docId, context);
+                    }
+                  } catch (e) {
+                    showToast(
+                      context: context,
+                      msg: e.toString(),
+                      seconds: 5000,
+                    );
+                  }
+                }),
                 // add to cart =====================================================
                 Obx(
                   () => Container(
@@ -269,9 +318,11 @@ class RecommendFoodDetails extends StatelessWidget {
                         totalPrice: foodController.totalPrice.value,
                       );
                       showToast(
-                          context: context,
-                          msg: "$foodName added to cart!",
-                          seconds: 3000);
+                        context: context,
+                        msg: "$foodName added to cart!",
+                        seconds: 3000,
+                      );
+                      // await cartController.getTotalCartItemsPrice();
                     } catch (e) {
                       showToast(
                           context: context, msg: e.toString(), seconds: 5000);

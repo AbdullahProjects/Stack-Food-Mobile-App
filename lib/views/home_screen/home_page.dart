@@ -2,11 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
+import 'package:food_delivery/controllers/shopping_controller.dart';
 import 'package:food_delivery/services/firestore_services.dart';
 import 'package:food_delivery/views/home_screen/components/popular_food.dart';
 import 'package:food_delivery/views/home_screen/components/recommend_food.dart';
 import 'package:food_delivery/views/home_screen/components/slider.dart';
 import 'package:food_delivery/views/home_screen/popular_food_details.dart';
+import 'package:food_delivery/views/home_screen/shimmer%20effect/featured_food_shimmer.dart';
+import 'package:food_delivery/views/home_screen/shimmer%20effect/popular_food_shimmer.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentDot = 0;
+  var cartsController = Get.put(ShoppingController());
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +86,10 @@ class _HomePageState extends State<HomePage> {
                     future: FirestoreServices.getFeaturedProducts(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (!snapshot.hasData) {
-                        return Center();
+                        // shimmer effect until data not loaded properly
+                        return featuredFoodShimmer();
                       } else {
+                        // data
                         var featuredData = snapshot.data!.docs;
 
                         return Column(
@@ -116,7 +123,12 @@ class _HomePageState extends State<HomePage> {
                                           vertical: 2))
                                       .make()
                                       .onTap(() {
-                                    Get.to(() => RecommendFoodDetails(
+                                    // check food is in favourite or not
+                                    cartsController
+                                        .checkIfFav(featuredData[index]);
+
+                                    Get.to(
+                                      () => RecommendFoodDetails(
                                         featuredData[index]["food_img"],
                                         featuredData[index]["name"],
                                         featuredData[index]["rating"],
@@ -125,7 +137,10 @@ class _HomePageState extends State<HomePage> {
                                         featuredData[index]["description"],
                                         featuredData[index]["location"],
                                         featuredData[index]["time"],
-                                        featuredData[index]["price"]));
+                                        featuredData[index]["price"],
+                                        featuredData[index].id,
+                                      ),
+                                    );
                                   });
                                 }),
                             DotsIndicator(
@@ -183,16 +198,19 @@ class _HomePageState extends State<HomePage> {
                     .make(),
                 Dimension.heightSize(15).heightBox,
                 FutureBuilder(
-                    future: FirestoreServices.getPopularProducts(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center();
-                      } else {
-                        var popularFoodData = snapshot.data!.docs;
+                  future: FirestoreServices.getPopularProducts(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      // shimmer effect until data not loaded
+                      return popularFoodShimmer();
+                    } else {
+                      // data
+                      var popularFoodData = snapshot.data!.docs;
 
-                        return Column(
-                          children:
-                              List.generate(popularFoodData.length, (index) {
+                      return Column(
+                        children: List.generate(
+                          popularFoodData.length,
+                          (index) {
                             return popularFoodPairing(
                                     img: popularFoodData[index]["food_img"],
                                     foodName: popularFoodData[index]["name"],
@@ -202,25 +220,34 @@ class _HomePageState extends State<HomePage> {
                                         ["location"],
                                     foodIcon3Detail: popularFoodData[index]
                                         ["time"])
-                                .onTap(() {
-                              Get.to(
-                                () => PopularFoodDetails(
-                                  popularFoodData[index]["food_img"],
-                                  popularFoodData[index]["name"],
-                                  popularFoodData[index]["rating"],
-                                  popularFoodData[index]["comments"],
-                                  popularFoodData[index]["size"],
-                                  popularFoodData[index]["location"],
-                                  popularFoodData[index]["description"],
-                                  popularFoodData[index]["time"],
-                                  popularFoodData[index]["price"],
-                                ),
-                              );
-                            });
-                          }),
-                        );
-                      }
-                    }),
+                                .onTap(
+                              () {
+                                // check food in in favourite or not before going to food details page
+                                cartsController
+                                    .checkIfFav(popularFoodData[index]);
+
+                                Get.to(
+                                  () => PopularFoodDetails(
+                                    popularFoodData[index]["food_img"],
+                                    popularFoodData[index]["name"],
+                                    popularFoodData[index]["rating"],
+                                    popularFoodData[index]["comments"],
+                                    popularFoodData[index]["size"],
+                                    popularFoodData[index]["location"],
+                                    popularFoodData[index]["description"],
+                                    popularFoodData[index]["time"],
+                                    popularFoodData[index]["price"],
+                                    popularFoodData[index].id,
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    }
+                  },
+                ),
                 Dimension.heightSize(20).heightBox
               ],
             ),
