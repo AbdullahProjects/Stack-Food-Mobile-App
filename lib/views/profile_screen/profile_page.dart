@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+// import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:food_delivery/common_widgets/common_widgets.dart';
 import 'package:food_delivery/consts/consts.dart';
 import 'package:food_delivery/controllers/auth_controller.dart';
@@ -61,6 +61,40 @@ class ProfilePage extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() => const SettingsPage());
+                            },
+                            child: boldText(
+                              text: "Go to Settings",
+                              size: Dimension.widthSize(16),
+                              color: Colors.black,
+                              isOverflow: true,
+                            ),
+                          ),
+                          elevatedButton(
+                              text: "Edit Profile",
+                              textColor: AppColors.mainBlackColor,
+                              bgColor: AppColors.whiteColor,
+                              textSize: Dimension.widthSize(14),
+                              onPress: () async {
+                                profileController.nameController.text =
+                                    data["name"];
+                                profileController.phoneController.text =
+                                    data["phoneNumber"];
+                                profileController.addressController.text =
+                                    data["address"];
+                                // going towards edit profile screen =============================
+                                Get.to(() => EditProfilePage(data: data));
+                              }),
+                        ],
+                      ),
+                    ),
                     Dimension.heightSize(10).heightBox,
                     // profile picture =========================================
                     Container(
@@ -201,52 +235,52 @@ class ProfilePage extends StatelessWidget {
         },
       ),
       // floating action button; of edit profile and setting ===================
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        animationDuration: const Duration(milliseconds: 400),
-        foregroundColor: AppColors.whiteColor,
-        buttonSize: Size(Dimension.widthSize(50), Dimension.heightSize(48)),
-        spacing: 15,
-        backgroundColor: AppColors.mainColor,
-        children: [
-          SpeedDialChild(
-            child: Icon(
-              Icons.edit,
-              color: AppColors.blackColor,
-              size: Dimension.widthSize(20),
-            ),
-            backgroundColor: AppColors.iconColor1,
-            label: 'Edit Personal Info',
-            labelStyle: TextStyle(
-                fontSize: Dimension.widthSize(14), color: AppColors.blackColor),
-            labelBackgroundColor: AppColors.iconColor1,
-            onTap: () {
-              // giving data to text fields of edit personal info page =========
-              profileController.nameController.text = data["name"];
-              profileController.phoneController.text = data["phoneNumber"];
-              profileController.addressController.text = data["address"];
-              // going towards edit profile screen =============================
-              Get.to(() => EditProfilePage(data: data));
-            },
-          ),
-          SpeedDialChild(
-            child: Icon(
-              Icons.settings,
-              color: Colors.white,
-              size: Dimension.widthSize(20),
-            ),
-            backgroundColor: AppColors.iconColor2,
-            label: 'Settings',
-            labelStyle: TextStyle(
-                fontSize: Dimension.widthSize(14), color: Colors.white),
-            labelBackgroundColor: AppColors.iconColor2,
-            onTap: () {
-              // going towards settings screen =================================
-              Get.to(() => const SettingsPage());
-            },
-          ),
-        ],
-      ),
+      // floatingActionButton: SpeedDial(
+      //   animatedIcon: AnimatedIcons.menu_close,
+      //   animationDuration: const Duration(milliseconds: 400),
+      //   foregroundColor: AppColors.whiteColor,
+      //   buttonSize: Size(Dimension.widthSize(50), Dimension.heightSize(48)),
+      //   spacing: 15,
+      //   backgroundColor: AppColors.mainColor,
+      //   children: [
+      //     SpeedDialChild(
+      //       child: Icon(
+      //         Icons.edit,
+      //         color: AppColors.blackColor,
+      //         size: Dimension.widthSize(20),
+      //       ),
+      //       backgroundColor: AppColors.iconColor1,
+      //       label: 'Edit Personal Info',
+      //       labelStyle: TextStyle(
+      //           fontSize: Dimension.widthSize(14), color: AppColors.blackColor),
+      //       labelBackgroundColor: AppColors.iconColor1,
+      //       onTap: () {
+      //         // giving data to text fields of edit personal info page =========
+      //         profileController.nameController.text = data["name"];
+      //         profileController.phoneController.text = data["phoneNumber"];
+      //         profileController.addressController.text = data["address"];
+      //         // going towards edit profile screen =============================
+      //         Get.to(() => EditProfilePage(data: data));
+      //       },
+      //     ),
+      //     SpeedDialChild(
+      //       child: Icon(
+      //         Icons.settings,
+      //         color: Colors.white,
+      //         size: Dimension.widthSize(20),
+      //       ),
+      //       backgroundColor: AppColors.iconColor2,
+      //       label: 'Settings',
+      //       labelStyle: TextStyle(
+      //           fontSize: Dimension.widthSize(14), color: Colors.white),
+      //       labelBackgroundColor: AppColors.iconColor2,
+      //       onTap: () {
+      //         // going towards settings screen =================================
+      //         Get.to(() => const SettingsPage());
+      //       },
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

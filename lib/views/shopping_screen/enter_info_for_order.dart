@@ -135,31 +135,31 @@ class _EnterInfoForOrderState extends State<EnterInfoForOrder> {
                       seconds: 5000,
                     );
                   } else {
-                    if (isPhoneVerified == true) {
-                      try {
-                        await orderController.placeOrder(
-                          context,
-                          nameController.text,
-                          phoneController.text,
-                          addressController.text,
-                          cityController.text,
-                        );
-                      } catch (e) {
-                        showToast(
-                          context: context,
-                          msg: e.toString(),
-                          seconds: 5000,
-                        );
-                      }
-                    } else {
-                      showDialog(
+                    // if (isPhoneVerified == true) {
+                    try {
+                      await orderController.placeOrder(
+                        context,
+                        nameController.text,
+                        phoneController.text,
+                        addressController.text,
+                        cityController.text,
+                      );
+                    } catch (e) {
+                      showToast(
                         context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext context) {
-                          return phoneNumberNotVerified(context);
-                        },
+                        msg: e.toString(),
+                        seconds: 5000,
                       );
                     }
+                    // } else {
+                    //   showDialog(
+                    //     context: context,
+                    //     barrierDismissible: false,
+                    //     builder: (BuildContext context) {
+                    //       return phoneNumberNotVerified(context);
+                    //     },
+                    //   );
+                    // }
                   }
                 },
               ),

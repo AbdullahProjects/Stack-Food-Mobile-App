@@ -45,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            
             Dimension.heightSize(20).heightBox,
             // logo image ======================================================
             logoContainer(),
